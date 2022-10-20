@@ -1,0 +1,20 @@
+version: "3.2"
+
+services:
+  mysql-db:
+    container_name: "mysql-db-instance" 
+    image: mysql:5.7.16
+    environment:
+        MYSQL_ROOT_PASSWORD: "MyR00t_2022"
+        MYSQL_DATABASE: "my_lovely_adventure_works"
+        MYSQL_USER: "user"
+        MYSQL_PASSWORD: "P4ssw_0rd_2022"
+    ports:
+      - "3306:3306"
+    volumes:
+      - type: bind
+        source: ./mysql-data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./docker-entrypoint-initdb.d
+        target: /docker-entrypoint-initdb.d

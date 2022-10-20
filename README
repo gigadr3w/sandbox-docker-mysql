@@ -1,0 +1,54 @@
+Sandbox-docker-mysql 
+====================
+
+This is a simple tutorial on how to make a MySQL Docker container sandbox with data persistency, starting from an existing database backup.
+
+## Requirements
+
+* Your backup file
+* [Docker](https://www.docker.com/)
+* [Docker compose](https://docs.docker.com/compose/) 
+
+## How To
+
+1. Backup your mysql database you want to "dockerize". 
+
+I'm using mysqldump backup database tool, very cool, for details have a look [here](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html). Type
+
+```shell
+mysqldump [your_database] -u[user] -p[password] > dump_file.sql
+```
+
+move the backup file within ```/docker-entrypoint-initdb.d``` folder.
+
+2. At the moment there is a bug (?) for mounted host folder in environments as mine (Win11, Docker 20.10.17, mysql images), I've no tryed with a volume folder, because I want that data folder remains in the same directory of my docker-compose.yml. Workaround
+
+##### Manually create a local folder named "mysql-data" in the same folder of the docker-compose.yml  
+
+Otherwhise mysql image will not have permission to create database under this folder. 
+
+3. Start your container, typing in the same folder
+
+```shell
+docker-compose up -d
+```
+
+4. Then you can access to your container console typing 
+
+```shell
+exec -it mysql-db-instance /bin/bash
+```
+
+5. And access to mysql console 
+
+```shell
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $SA_PASSWORD -d MyLovelyAdventureWorks
+```
+
+7. Make a query statement for select all tables name
+ 
+
+```SQL
+SELECT name FROM sys.tables;
+GO
+```
